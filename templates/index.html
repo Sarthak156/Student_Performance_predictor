@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Performance Predictor</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #22c55e;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🎯 Student Performance Predictor</h2>
+
+    <input id="weekly_self_study_hours" placeholder="Study Hours (0–40)">
+    <input id="attendance_percentage" placeholder="Attendance %">
+    <input id="class_participation" placeholder="Participation (0–10)">
+
+    <button onclick="predict()">Predict</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+async function predict() {
+    const data = {
+        weekly_self_study_hours: parseFloat(document.getElementById("weekly_self_study_hours").value),
+        attendance_percentage: parseFloat(document.getElementById("attendance_percentage").value),
+        class_participation: parseFloat(document.getElementById("class_participation").value)
+    };
+
+    const resultBox = document.getElementById("result");
+    resultBox.innerText = "Predicting... ⏳";
+
+    try {
+        const response = await fetch("/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const res = await response.json();
+        console.log(res);
+
+        if (res.prediction !== undefined) {
+            let score = res.prediction;
+
+            let grade = "";
+            if (score >= 90) grade = "A 🔥";
+            else if (score >= 75) grade = "B 👍";
+            else if (score >= 60) grade = "C 🙂";
+            else if (score >= 50) grade = "D ⚠️";
+            else grade = "F ❌";
+
+            resultBox.innerText = `Predicted Score: ${score} (${grade})`;
+        } else {
+            resultBox.innerText = "Error: " + res.error;
+        }
+
+    } catch (err) {
+        resultBox.innerText = "Server error ❌";
+    }
+}
+</script>
+
+</body>
+</html>
