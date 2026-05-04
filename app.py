@@ -1,16 +1,14 @@
 # __define-ocg__
 from flask import Flask, request, jsonify, render_template
-import pickle
+
 import numpy as np
 import os
 
 app = Flask(__name__)
 
-# Load models + scaler
-rf_model = pickle.load(open("rf_model.pkl", "rb"))
-gb_model = pickle.load(open("gb_model.pkl", "rb"))
-scaler = pickle.load(open("scaler.pkl", "rb"))
-feature_list = pickle.load(open("features.pkl", "rb"))
+from Train_model import get_trained_objects
+
+rf_model, gb_model, scaler, feature_list = get_trained_objects()
 
 @app.route('/')
 def home():

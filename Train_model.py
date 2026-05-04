@@ -9,7 +9,8 @@ from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 # Load dataset - use sample for faster training
-df = pd.read_csv("student_performance.csv")
+url = "https://drive.google.com/uc?id=1IjnmDMY_Tz5kzQD9m5mDJ9Bvf_YpOUC4"
+df = pd.read_csv(url)
 
 # For large datasets, sample for faster training while maintaining quality
 if len(df) > 50000:
@@ -173,3 +174,6 @@ pickle.dump(all_features, open("features.pkl", "wb"))
 
 print("\nModels trained and saved successfully!")
 print(f"Features saved for prediction consistency.")
+
+def get_trained_objects():
+    return rf_model, et_model, scaler, all_features
